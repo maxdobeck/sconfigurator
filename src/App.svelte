@@ -19,23 +19,23 @@
 	// ssl config
 	let noSslBump = [];
 	// domain based routing + config
-	let directDomains = [];
-	let tunnelDomains = [];
-	let fastFail = [];
+	let directDomains = '';
+	let tunnelDomains = '';
+	let fastFail = '';
 	let basicAuthUser = '';
-	let basicAuthPwd = '';
-	let basicAuthHostPort = '';
+	let basicAuthPwd = '*****';
+	let basicAuthHostPort = '80';
 	// logging
 	let verbosity = 'normal';
 	let logfile = '';
 	// network config
 	let parentProxy = '';
-	let parentProxyUser = '';
-	let parentProxyPwd = '';
+	let parentProxyUser = 'username';
+	let parentProxyPwd = 'password';
 	let pacUrl = '';
 	let tunnelThruProxy = false;
-	let noAutoDetect = false;
-	let dnsServer = [''];
+	let autoDetectPac = true;
+	let dnsServer = '';
 	// UI: OS settings
 	let os = 'linux';
 
@@ -94,6 +94,82 @@
 				</label>
 			{/each}
 		</div>
+
+		<!-- SSL Config -->
+		<div class="flag-section">
+			<p class="hint">SSL Config</p>
+			<p class="hint">Read about SSL Bumping for more info</p>
+			<label class="flags">
+				No Bump Domains
+				<input id="csv-input" type=text bind:value={noSslBump} placeholder="Comma separated list of domains that should NOT be bumped">
+			</label>
+		</div>
+
+		<!-- Domain Routing & Config -->
+		<div class="flag-section">
+			<p class="hint">Domain Routing & Config</p>
+			<label class="flags">
+				Direct Domains
+				<input id="csv-input" type=text bind:value={directDomains} placeholder="CSV list that should go through the public internet">
+			</label>
+
+			<label class="flags">
+				Tunnel Domains
+				<input id="csv-input" type=text bind:value={tunnelDomains} placeholder="CSV list that should ONLY be routed through tunnel">
+			</label>
+
+			<label class="flags">
+				Fast Fail
+				<input id="csv-input" type=text bind:value={fastFail} placeholder="CSV list of domains that should be ignored (speeds up tests)">
+			</label>
+
+			<label class="flags">
+				Basic Auth User
+				<input type="text" bind:value={basicAuthUser} placeholder="username for URL basic auth">
+			</label>
+
+			<label class="flags">
+				Basic Auth User
+				<input type="text" bind:value={basicAuthHostPort} placeholder="Port used by server, probaly 80">
+			</label>
+		</div>
+
+		<div class="flag-section">
+			<p class="hint">Network Config</p>
+			{#if pacUrl.length === 0}
+			<label class="flags">
+				Parent Proxy
+				<input type="text" bind:value={parentProxy} placeholder="someproxy.yourdomain.com">
+			</label>
+			{/if}
+
+			{#if parentProxy.length === 0}
+			<label class="flags">
+				Parent Proxy
+				<input type="text" bind:value={pacUrl} placeholder="file path or URL for PAC">
+			</label>
+			{/if}
+
+			<label class="flags">
+				{#if parentProxy.length > 0 || pacUrl.length > 0}
+					<input type="checkbox" bind:value={tunnelThruProxy}>
+				{:else}
+					<input type="checkbox" bind:value={tunnelThruProxy} disabled="disabled">
+				{/if}
+				Tunnel through Proxy
+			</label>
+
+			<label class="flags">
+				<input type="checkbox" checked bind:value={autoDetectPac}>
+				Auto Detect PAC				
+			</label>
+
+			<label class="flags">
+				DNS Server(s)
+				<input type="text" bind:value={dnsServer} placeholder="DNS min. two recommended">
+			</label>
+		</div>
+	<!-- end of flags section -->
 	</div>
 
 	<h2>Sauce Connect Start Command</h2>
@@ -118,8 +194,30 @@
 			{#if logfile}
 				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-l {logfile}</code>	
 			{/if}
-			<code transition:blur={{duration:800}}>-x {scDc.get(dc_choice)}</code>
+			<code>-x {scDc.get(dc_choice)}</code>
 	</div>
+<!-- 	
+	// ssl config
+	let noSslBump = [];
+	// domain based routing + config
+	let directDomains = '';
+	let tunnelDomains = '';
+	let fastFail = '';
+	let basicAuthUser = '';
+	let basicAuthPwd = '*****';
+	let basicAuthHostPort = '80';
+	// logging
+	let verbosity = 'normal';
+	let logfile = '';
+	// network config
+	let parentProxy = '';
+	let parentProxyUser = 'username';
+	let parentProxyPwd = 'password';
+	let pacUrl = '';
+	let tunnelThruProxy = false;
+	let autoDetectPac = true;
+	let dnsServer = '';
+ -->
 
 	<div id="copy-container">
 		<button id="copy-cmd-btn" title="copy to clipboard">copy</button>
@@ -143,6 +241,7 @@
 			Mac
 		</label>
 	</div>
+	<p>If you just downloaded sauce connect you can find the binary at a path like this:</p>
 	<pre>
 		{#if os === 'linux' || os === 'mac'}
 		<code>/home/you/Downloads/sc-latest-ver/bin/sc</code>
@@ -172,8 +271,10 @@
 
 	.flag-section {
 		display: inline-block;
-		border: 1px solid;
-		border-color: darkgrey;
+		/* border: 1px solid;
+		border-color: darkgrey; */
+		background-color:#f6f9fc;
+		margin-top: 20px;
 	}
 
 	.flag-section label {
@@ -193,6 +294,10 @@
 	
 	.flags {
 		display: inline-block;
+	}
+
+	#csv-input {
+		width: 480px;
 	}
 
 	.cmd-container {
@@ -238,6 +343,10 @@
 			border-color: darkgrey;
 			margin-left: auto;
 			margin-right: auto;
+		}
+
+		#csv-input {
+			width: 100%;
 		}
 	}
 

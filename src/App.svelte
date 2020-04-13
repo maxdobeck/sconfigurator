@@ -51,7 +51,7 @@
 <main>
 
     <h2>Flags</h2>
-    <p class="hint">See <a href={cliRef} target="_blank">Quick Refernce Doc</a> for more info</p>
+    <p class="hint">See <a href={cliRef} target="_blank">Quick Reference Doc</a> for more info</p>
     <div class="flag-container">
 		<!-- Logging -->
 		<div class="flag-section">

@@ -121,6 +121,7 @@
 					<strike>Direct Domains</strike>
 					<input id="csv-input" type=text bind:value={directDomains} placeholder="CSV list that should go through the public internet" disabled>
 				{:else}
+					Direct Domains
 					<input id="csv-input" type=text bind:value={directDomains} placeholder="CSV list that should go through the public internet">
 				{/if}
 			</label>

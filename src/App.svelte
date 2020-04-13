@@ -6,6 +6,7 @@
 	let apiKey = '-k sauce_access_key ';
 	let name = '';
 	let shared = false;
+	// region
 	let scDc = new Map();
 	scDc.set('us-west', 'https://us-west-1.saucelabs.com/rest/v1 ');
 	scDc.set('EU', 'https://eu-central-1.saucelabs.com/rest/v1 ');
@@ -75,7 +76,11 @@
 				<input type=checkbox bind:checked={shared} value="false">
 				Shared
 			</label>
+		</div>
 
+		<!-- Region -->
+		<div class="flag-section" id="region">
+			<p class="hint">Region</p>
 			{#each [...scDc.keys()] as datacenter}
 				<label class="flags">
 					<input type="radio" bind:group={dc_choice} value="{datacenter}">
@@ -151,6 +156,16 @@
 	.flag-section label {
 		padding-left: 10px;
 		padding-right: 10px;
+	}
+
+	#region {
+		padding-bottom: 12px;
+		padding-top: 7px;
+	}
+
+	#region label {
+		padding-left: 12px;
+		padding-right: 12px;
 	}
 	
 	.flags {

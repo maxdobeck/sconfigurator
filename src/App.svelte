@@ -1,4 +1,6 @@
 <script>
+	import { fade } from 'svelte/transition';
+
 	let cliRef = 'https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+Command-Line+Quick+Reference+Guide';
 	let command = 'sc';
 	// sauce
@@ -24,8 +26,7 @@
 	let basicAuthPwd = '';
 	let basicAuthHostPort = '';
 	// logging
-	let verbose = false;
-	let veryVerbose = false;
+	let verbosity = 'normal';
 	let logfile = '';
 	// network config
 	let parentProxy = '';
@@ -49,12 +50,17 @@
 		<div class="flag-section">
 			<p class="hint">Logging</p>
 			<label class="flags">
-				<input type=checkbox bind:checked={verbose} value="verbose">
+				<input type=radio bind:group={verbosity} value="normal">
+				Normal
+			</label>
+
+			<label class="flags">
+				<input type=radio bind:group={verbosity} value="verbose">
 				Verbose
 			</label>
 
 			<label class="flags">
-				<input type=checkbox bind:checked={veryVerbose} value="veryVerbose">
+				<input type=radio bind:group={verbosity} value="veryVerbose">
 				Very Verbose
 			</label>
 
@@ -98,24 +104,24 @@
 			{/if}
 			
 			{#if shared}
-				<code>-s</code> 
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-s</code> 
 			{/if}
 			
-			{#if verbose} 
-				<code>-v</code>
+			{#if verbosity === 'verbose'} 
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-v</code>
 			{/if}
 			
-			{#if veryVerbose} 
-				<code>-v</code> 
+			{#if verbosity === 'veryVerbose'} 
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-vv</code> 
 			{/if}
 			
 			{#if logfile}
-				<code>-l {logfile}</code>	
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-l {logfile}</code>	
 			{/if}
-			<code>-x {scDc.get(dc_choice)}</code>
+			<code transition:blur={{duration:800}}>-x {scDc.get(dc_choice)}</code>
 	</div>
 
-	<div>
+	<div id="copy-container">
 		<button id="copy-cmd-btn" title="copy to clipboard">copy</button>
 	</div>
 
@@ -197,6 +203,10 @@
 
 	code {
 		font-size: 1.5em;;
+	}
+
+	#copy-container {
+		padding-top: 50px;
 	}
 
 	#copy-cmd-btn {

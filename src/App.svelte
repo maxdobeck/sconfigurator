@@ -8,12 +8,12 @@
 	let shared = false;
 	// region
 	let scDc = new Map();
-	scDc.set('us-west', 'https://us-west-1.saucelabs.com/rest/v1 ');
+	scDc.set('US-WEST', 'https://us-west-1.saucelabs.com/rest/v1 ');
 	scDc.set('EU', 'https://eu-central-1.saucelabs.com/rest/v1 ');
-	scDc.set('us-east', 'https://us-east-1.saucelabs.com/rest/v1 ');
+	scDc.set('US-EAST', 'https://us-east-1.saucelabs.com/rest/v1 ');
 	scDc.set('RDC EU', 'https://eu1.api.testobject.com/sc/rest/v1 ');
 	scDc.set('RDC US', 'https://us1.api.testobject.com/sc/rest/v1 ');
-	let dc_choice = 'us-west';
+	let dc_choice = 'US-WEST';
 	// ssl config
 	let noSslBump = [];
 	// domain based routing + config
@@ -92,23 +92,33 @@
 
 	<h2>Sauce Connect Start Command</h2>
 	<div class="cmd-container">
-		<button id="copy-cmd-btn" title="copy to clipboard">copy</button>
-		<pre>
-			<code>
-				{command} {user} {apiKey}{#if name.length > 0}-i {name} {/if}{#if shared}-s {/if}{#if verbose} -v {/if}{#if veryVerbose} -v {/if}{#if logfile} -l {logfile}{/if}-x {scDc.get(dc_choice)}
-			</code>
-		</pre>
-
-		<p>Your command should be preaced with a path like
-			this if you left the Sauce Connect Proxy in your downloads:</p>
-		<pre>
-			{#if os === 'linux' || os === 'mac'}
-			<p>/home/you/Downloads/sc-latest-ver/bin/sc</p>
-			{:else}
-			<p>C:\you\Downloads\sc-latest-ver\bin\sc.exe</p>
+			<code>{command} {user} {apiKey}</code>
+			{#if name.length > 0}
+				<code>-i {name}</code> 
 			{/if}
-		</pre>
+			
+			{#if shared}
+				<code>-s</code> 
+			{/if}
+			
+			{#if verbose} 
+				<code>-v</code>
+			{/if}
+			
+			{#if veryVerbose} 
+				<code>-v</code> 
+			{/if}
+			
+			{#if logfile}
+				<code>-l {logfile}</code>	
+			{/if}
+			<code>-x {scDc.get(dc_choice)}</code>
 	</div>
+
+	<div>
+		<button id="copy-cmd-btn" title="copy to clipboard">copy</button>
+	</div>
+
 	
 	<h5 class="hint">Operating System</h5>
 	<div class="os">
@@ -127,7 +137,14 @@
 			Mac
 		</label>
 	</div>
-	
+	<pre>
+		{#if os === 'linux' || os === 'mac'}
+		<code>/home/you/Downloads/sc-latest-ver/bin/sc</code>
+		{:else}
+		<code>C:\you\Downloads\sc-latest-ver\bin\sc.exe</code>
+		{/if}
+	</pre>
+
 	<p class="hint">
 		<a href="https://wiki.saucelabs.com/display/DOCS/Downloading+Sauce+Connect+Proxy" target="_blank">Download</a>
 		Sauce Connect for {os}
@@ -175,15 +192,15 @@
 	.cmd-container {
 		margin-left: auto;
 		margin-right: auto;
+		display: inline-block;
 	}
 
 	code {
-		font-size: 1.5em;
+		font-size: 1.5em;;
 	}
 
 	#copy-cmd-btn {
 		background-color: transparent;
-		margin-left: 40%;
 		color: darkgrey;
 	}
 

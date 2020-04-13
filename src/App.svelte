@@ -1,55 +1,108 @@
 <script>
 	let cliRef = 'https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+Command-Line+Quick+Reference+Guide';
-	let user = 'sauce_username';
-	let apiKey = 'sauce_access_key';
+	let command = 'sc';
+	// sauce
+	let user = '-u sauce_username';
+	let apiKey = '-k sauce_access_key ';
+	let name = '';
+	let shared = false;
+	let scDc = new Map();
+	scDc.set('us-west', 'https://us-west-1.saucelabs.com/rest/v1 ');
+	scDc.set('EU', 'https://eu-central-1.saucelabs.com/rest/v1 ');
+	scDc.set('us-east', 'https://us-east-1.saucelabs.com/rest/v1 ');
+	scDc.set('RDC EU', 'https://eu1.api.testobject.com/sc/rest/v1 ');
+	scDc.set('RDC US', 'https://us1.api.testobject.com/sc/rest/v1 ');
+	let dc_choice = 'us-west';
+	// ssl config
 	let noSslBump = [];
+	// domain based routing + config
 	let directDomains = [];
 	let tunnelDomains = [];
+	let fastFail = [];
+	let basicAuthUser = '';
+	let basicAuthPwd = '';
+	let basicAuthHostPort = '';
+	// logging
 	let verbose = false;
 	let veryVerbose = false;
-	let fastFail = [];
-	let name = '';
 	let logfile = '';
+	// network config
 	let parentProxy = '';
 	let parentProxyUser = '';
 	let parentProxyPwd = '';
 	let pacUrl = '';
 	let tunnelThruProxy = false;
-	let shared = false;
-	let scDc = [
-		'https://eu-central-1.saucelabs.com/rest/v1',
-		'https://us1.api.testobject.com/sc/rest/v1',
-		'https://eu1.api.testobject.com/sc/rest/v1'
-	];
-	let basicAuthUser = '';
-	let basicAuthPwd = '';
-	let basicAuthHostPort = '';
 	let noAutoDetect = false;
 	let dnsServer = [''];
-
-	// OS settings
+	// UI: OS settings
 	let os = 'linux';
+
 </script>
 
 <main>
 
-	<h2>Flags</h2>
-	<p class="hint">See <a href={cliRef} target="_blank">Quick Refernce Doc</a> for more info</p>
-	
-	<label>
-		<input type=checkbox bind:checked={verbose} value="verbose">
-		Verbose
-	</label>
+    <h2>Flags</h2>
+    <p class="hint">See <a href={cliRef} target="_blank">Quick Refernce Doc</a> for more info</p>
+    <div class="flag-container">
+		<!-- Logging -->
+		<div class="flag-section">
+			<p class="hint">Logging</p>
+			<label class="flags">
+				<input type=checkbox bind:checked={verbose} value="verbose">
+				Verbose
+			</label>
+
+			<label class="flags">
+				<input type=checkbox bind:checked={veryVerbose} value="veryVerbose">
+				Very Verbose
+			</label>
+
+			<label class="flags">
+				Log file path
+				<input type="text" bind:value={logfile} placeholder="logfile">
+			</label>
+		</div>
+
+		<!-- Sauce Stuff -->
+		<div class="flag-section">
+			<p class="hint">Sauce Stuff</p>
+			<label class="flags">
+				Tunnel Name
+				<input type=text bind:value={name} placeholder="tunnel name">
+			</label>
+
+			<label class="flags">
+				<input type=checkbox bind:checked={shared} value="false">
+				Shared
+			</label>
+
+			{#each [...scDc.keys()] as datacenter}
+				<label class="flags">
+					<input type="radio" bind:group={dc_choice} value="{datacenter}">
+					{datacenter}
+				</label>
+			{/each}
+		</div>
+	</div>
 
 	<h2>Sauce Connect Start Command</h2>
 	<div class="cmd-container">
 		<button id="copy-cmd-btn" title="copy to clipboard">copy</button>
+		<pre>
+			<code>
+				{command} {user} {apiKey}{#if name.length > 0}-i {name} {/if}{#if shared}-s {/if}{#if verbose} -v {/if}{#if veryVerbose} -v {/if}{#if logfile} -l {logfile}{/if}-x {scDc.get(dc_choice)}
+			</code>
+		</pre>
 
-		{#if os === 'linux' || os === 'mac'}
-		<p>/home/jerry/saucelabs/sc-latest/bin/sc </p>
-		{:else}
-		<p>C:\home\jerry\saucelabs\sc-latest\bin\sc </p>
-		{/if}
+		<p>Your command should be preaced with a path like
+			this if you left the Sauce Connect Proxy in your downloads:</p>
+		<pre>
+			{#if os === 'linux' || os === 'mac'}
+			<p>/home/you/Downloads/sc-latest-ver/bin/sc</p>
+			{:else}
+			<p>C:\you\Downloads\sc-latest-ver\bin\sc.exe</p>
+			{/if}
+		</pre>
 	</div>
 	
 	<h5 class="hint">Operating System</h5>
@@ -89,14 +142,38 @@
 		font-weight: 100;
 	}
 
+	.flag-section {
+		display: inline-block;
+		border: 1px solid;
+		border-color: darkgrey;
+	}
+
+	.flag-section label {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	
+	.flags {
+		display: inline-block;
+	}
+
 	.cmd-container {
 		margin-left: auto;
 		margin-right: auto;
 	}
 
+	code {
+		font-size: 1.5em;
+	}
+
 	#copy-cmd-btn {
 		background-color: transparent;
 		margin-left: 40%;
+		color: darkgrey;
+	}
+
+	#copy-cmd-btn:hover {
+		color:red;
 	}
 
 	.hint {
@@ -109,6 +186,7 @@
 		border-color: darkgrey;
 		margin-left: auto;
 		margin-right: auto;
+		padding-top: 10px;
 	}
 
 	@media (max-width: 700px) {	
@@ -120,6 +198,7 @@
 			margin-right: auto;
 		}
 	}
+
 	@media screen {
 		main {
 			max-width: none;

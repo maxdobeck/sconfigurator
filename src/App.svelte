@@ -10,7 +10,7 @@
 	let shared = false;
 	// region
 	let scDc = new Map();
-	scDc.set('US-WEST', 'https://us-west-1.saucelabs.com/rest/v1 ');
+	scDc.set('US-WEST', '');
 	scDc.set('EU', 'https://eu-central-1.saucelabs.com/rest/v1 ');
 	scDc.set('US-EAST', 'https://us-east-1.saucelabs.com/rest/v1 ');
 	scDc.set('RDC EU', 'https://eu1.api.testobject.com/sc/rest/v1 ');
@@ -188,72 +188,74 @@
 
 	<h2>Sauce Connect Start Command</h2>
 	<div class="cmd-container">
-			<code>{command} {user} {apiKey}</code>
-			{#if name.length > 0}
-				<code>-i {name}</code> 
-			{/if}
-			
-			{#if shared}
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-s</code> 
-			{/if}
-			
-			{#if verbosity === 'verbose'} 
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-v</code>
-			{/if}
-			
-			{#if verbosity === 'veryVerbose'} 
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-vv</code> 
-			{/if}
-			
-			{#if logfile}
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-l {logfile}</code>	
-			{/if}
+		<code>{command} {user} {apiKey}</code>
+		{#if name.length > 0}
+			<code>-i {name}</code> 
+		{/if}
+		
+		{#if shared}
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-s</code> 
+		{/if}
+		
+		{#if verbosity === 'verbose'} 
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-v</code>
+		{/if}
+		
+		{#if verbosity === 'veryVerbose'} 
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-vv</code> 
+		{/if}
+		
+		{#if logfile}
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-l {logfile}</code>	
+		{/if}
 
-			{#if noSslBump.length > 0}
-				<code>-B {noSslBump}</code>
-			{/if}
+		{#if noSslBump.length > 0}
+			<code>-B {noSslBump}</code>
+		{/if}
 
-			{#if directDomains.length > 0}
-				<code>-D {directDomains}</code>
-			{/if}
+		{#if directDomains.length > 0}
+			<code>-D {directDomains}</code>
+		{/if}
 
-			{#if tunnelDomains.length > 0}
-				<code>-t {tunnelDomains}</code>
-			{/if}
+		{#if tunnelDomains.length > 0}
+			<code>-t {tunnelDomains}</code>
+		{/if}
 
-			{#if fastFail.length > 0}
-				<code>-F {fastFail}</code>
-			{/if}
+		{#if fastFail.length > 0}
+			<code>-F {fastFail}</code>
+		{/if}
 
-			{#if basicAuthEx}
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--auth {basicAuth},mysite.com:443:user:pwd</code>
-			{/if}
+		{#if basicAuthEx}
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--auth {basicAuth},mysite.com:443:user:pwd</code>
+		{/if}
 
-			{#if parentProxy.length > 0}
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--proxy {parentProxy}:port</code>
-			{/if}
+		{#if parentProxy.length > 0}
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--proxy {parentProxy}:port</code>
+		{/if}
 
-			{#if parentProxyAuth}
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--proxy-userpwd {parentProxyUser}:{parentProxyPwd} </code>
-			{/if}
+		{#if parentProxyAuth}
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--proxy-userpwd {parentProxyUser}:{parentProxyPwd} </code>
+		{/if}
 
-			{#if pacUrl.length > 0}
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--pac {pacUrl}</code>
-			{/if}
+		{#if pacUrl.length > 0}
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--pac {pacUrl}</code>
+		{/if}
 
-			{#if tunnelThruProxy}
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--proxy-tunnel</code>
-			{/if}
+		{#if tunnelThruProxy}
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--proxy-tunnel</code>
+		{/if}
 
-			{#if autoDetectPac === false}
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--no-autodetect</code>
-			{/if}
+		{#if autoDetectPac === false}
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--no-autodetect</code>
+		{/if}
 
-			{#if dnsServer.length > 0}
-				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--dns {dnsServer}</code>
-			{/if}
+		{#if dnsServer.length > 0}
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--dns {dnsServer}</code>
+		{/if}
 
+		{#if dc_choice !== 'US-WEST'}
 			<code>-x {scDc.get(dc_choice)}</code>
+		{/if}
 	</div>
 
 	<div id="copy-container">

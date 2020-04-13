@@ -45,7 +45,8 @@
 		let range = document.createRange();
 		range.selectNodeContents(launchCmd);
 		window.getSelection().addRange(range);
-		document.execCommand('copy');	}
+		document.execCommand('copy');	
+	};
 </script>
 
 <main>
@@ -116,13 +117,22 @@
 		<div class="flag-section">
 			<p class="hint">Domain Routing & Config</p>
 			<label class="flags">
-				Direct Domains
-				<input id="csv-input" type=text bind:value={directDomains} placeholder="CSV list that should go through the public internet">
+				{#if tunnelDomains.length > 0}
+					<strike>Direct Domains</strike>
+					<input id="csv-input" type=text bind:value={directDomains} placeholder="CSV list that should go through the public internet" disabled>
+				{:else}
+					<input id="csv-input" type=text bind:value={directDomains} placeholder="CSV list that should go through the public internet">
+				{/if}
 			</label>
 
 			<label class="flags">
-				Tunnel Domains
-				<input id="csv-input" type=text bind:value={tunnelDomains} placeholder="CSV list that should ONLY be routed through tunnel">
+				{#if directDomains.length > 0}
+					<strike>Tunnel Domains</strike>
+					<input id="csv-input" type=text bind:value={tunnelDomains} placeholder="CSV list that should ONLY be routed through tunnel" disabled>
+				{:else}
+					Tunnel Domains
+					<input id="csv-input" type=text bind:value={tunnelDomains} placeholder="CSV list that should ONLY be routed through tunnel">
+				{/if}
 			</label>
 
 			<label class="flags">
@@ -310,8 +320,6 @@
 
 	.flag-section {
 		display: inline-block;
-		/* border: 1px solid;
-		border-color: darkgrey; */
 		background-color:#f6f9fc;
 		margin-top: 20px;
 	}

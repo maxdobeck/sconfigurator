@@ -22,14 +22,14 @@
 	let directDomains = '';
 	let tunnelDomains = '';
 	let fastFail = '';
-	let basicAuthUser = '';
-	let basicAuthPwd = '*****';
-	let basicAuthHostPort = '80';
+	let basicAuth = 'host:port:user:pwd';
+	let basicAuthEx = false;
 	// logging
 	let verbosity = 'normal';
 	let logfile = '';
 	// network config
 	let parentProxy = '';
+	let parentProxyAuth = false;
 	let parentProxyUser = 'username';
 	let parentProxyPwd = 'password';
 	let pacUrl = '';
@@ -39,6 +39,13 @@
 	// UI: OS settings
 	let os = 'linux';
 
+	function copyCmd(event) {
+		const launchCmd = document.querySelector(".cmd-container");
+		// const text = launchCmd.textContent;
+		let range = document.createRange();
+		range.selectNodeContents(launchCmd);
+		window.getSelection().addRange(range);
+		document.execCommand('copy');	}
 </script>
 
 <main>
@@ -124,16 +131,12 @@
 			</label>
 
 			<label class="flags">
-				Basic Auth User
-				<input type="text" bind:value={basicAuthUser} placeholder="username for URL basic auth">
-			</label>
-
-			<label class="flags">
-				Basic Auth User
-				<input type="text" bind:value={basicAuthHostPort} placeholder="Port used by server, probaly 80">
+				<input type="checkbox" bind:checked={basicAuthEx} value="basicAuthEx">
+				Basic Auth (example only)
 			</label>
 		</div>
 
+		<!-- Network Config -->
 		<div class="flag-section">
 			<p class="hint">Network Config</p>
 			{#if pacUrl.length === 0}
@@ -145,23 +148,34 @@
 
 			{#if parentProxy.length === 0}
 			<label class="flags">
-				Parent Proxy
+				PAC
 				<input type="text" bind:value={pacUrl} placeholder="file path or URL for PAC">
 			</label>
 			{/if}
 
 			<label class="flags">
 				{#if parentProxy.length > 0 || pacUrl.length > 0}
-					<input type="checkbox" bind:value={tunnelThruProxy}>
+					<input type="checkbox" bind:checked={parentProxyAuth} value="parentProxyAuth">
+					Proxy/PAC Auth (example only)
 				{:else}
-					<input type="checkbox" bind:value={tunnelThruProxy} disabled="disabled">
+					<input type="checkbox" bind:checked={parentProxyAuth} value="parentProxyAuth" disabled>
+					<strike>Proxy/PAC Auth (example only)</strike>
 				{/if}
-				Tunnel through Proxy
 			</label>
 
 			<label class="flags">
-				<input type="checkbox" checked bind:value={autoDetectPac}>
-				Auto Detect PAC				
+				{#if parentProxy.length > 0 || pacUrl.length > 0}
+					<input type="checkbox" bind:checked={tunnelThruProxy}>
+					Tunnel through Proxy
+				{:else}
+					<input type="checkbox" bind:checked={tunnelThruProxy} disabled="disabled">
+					<strike>Tunnel through Proxy</strike>
+				{/if}
+			</label>
+
+			<label class="flags">
+				<input type="checkbox" bind:checked={autoDetectPac}>
+				Auto Detect PAC		
 			</label>
 
 			<label class="flags">
@@ -194,33 +208,56 @@
 			{#if logfile}
 				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-l {logfile}</code>	
 			{/if}
+
+			{#if noSslBump.length > 0}
+				<code>-B {noSslBump}</code>
+			{/if}
+
+			{#if directDomains.length > 0}
+				<code>-D {directDomains}</code>
+			{/if}
+
+			{#if tunnelDomains.length > 0}
+				<code>-t {tunnelDomains}</code>
+			{/if}
+
+			{#if fastFail.length > 0}
+				<code>-F {fastFail}</code>
+			{/if}
+
+			{#if basicAuthEx}
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--auth {basicAuth},mysite.com:443:user:pwd</code>
+			{/if}
+
+			{#if parentProxy.length > 0}
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--proxy {parentProxy}:port</code>
+			{/if}
+
+			{#if parentProxyAuth}
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--proxy-userpwd {parentProxyUser}:{parentProxyPwd} </code>
+			{/if}
+
+			{#if pacUrl.length > 0}
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--pac {pacUrl}</code>
+			{/if}
+
+			{#if tunnelThruProxy}
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--proxy-tunnel</code>
+			{/if}
+
+			{#if autoDetectPac === false}
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--no-autodetect</code>
+			{/if}
+
+			{#if dnsServer.length > 0}
+				<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 400}}">--dns {dnsServer}</code>
+			{/if}
+
 			<code>-x {scDc.get(dc_choice)}</code>
 	</div>
-<!-- 	
-	// ssl config
-	let noSslBump = [];
-	// domain based routing + config
-	let directDomains = '';
-	let tunnelDomains = '';
-	let fastFail = '';
-	let basicAuthUser = '';
-	let basicAuthPwd = '*****';
-	let basicAuthHostPort = '80';
-	// logging
-	let verbosity = 'normal';
-	let logfile = '';
-	// network config
-	let parentProxy = '';
-	let parentProxyUser = 'username';
-	let parentProxyPwd = 'password';
-	let pacUrl = '';
-	let tunnelThruProxy = false;
-	let autoDetectPac = true;
-	let dnsServer = '';
- -->
 
 	<div id="copy-container">
-		<button id="copy-cmd-btn" title="copy to clipboard">copy</button>
+		<button on:click={copyCmd} id="copy-cmd-btn" title="copy to clipboard">copy</button>
 	</div>
 
 	

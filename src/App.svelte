@@ -164,7 +164,7 @@
 			{/if}
 
 			<label class="flags">
-				{#if parentProxy.length > 0 || pacUrl.length > 0}
+				{#if parentProxy.length > 0}
 					<input type="checkbox" bind:checked={parentProxyAuth} value="parentProxyAuth">
 					Proxy/PAC Auth (example only)
 				{:else}

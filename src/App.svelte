@@ -166,10 +166,10 @@
 			<label class="flags">
 				{#if parentProxy.length > 0}
 					<input type="checkbox" bind:checked={parentProxyAuth} value="parentProxyAuth">
-					Proxy/PAC Auth (example only)
+					Proxy Auth (example only)
 				{:else}
 					<input type="checkbox" bind:checked={parentProxyAuth} value="parentProxyAuth" disabled>
-					<strike>Proxy/PAC Auth (example only)</strike>
+					<strike>Proxy Auth (example only)</strike>
 				{/if}
 			</label>
 

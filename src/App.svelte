@@ -50,10 +50,9 @@
 </script>
 
 <main>
-
-    <h2>Flags</h2>
-    <p class="hint">See <a href={cliRef} target="_blank">Quick Reference Doc</a> for more info</p>
-    <div class="flag-container">
+    <p class="hint">Build a Sauce Connect start command. See <a href={cliRef} target="_blank">Quick Reference Doc</a> for more info</p>
+	<h2>Flags</h2>
+	<div class="flag-container">
 		<!-- Logging -->
 		<div class="flag-section">
 			<p class="hint">Logging</p>

@@ -4,10 +4,11 @@
 	let cliRef = 'https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+Command-Line+Quick+Reference+Guide';
 	let command = 'sc';
 	// sauce
-	let user = '-u sauce_username';
-	let apiKey = '-k sauce_access_key ';
+	let user = 'SAUCE_USERNAME';
+	let apiKey = 'SAUCE_ACCESS_KEY';
 	let name = '';
 	let shared = false;
+	let haMode = false;
 	// region
 	let scDc = new Map();
 	scDc.set('US-WEST', '');
@@ -88,6 +89,11 @@
 			<label class="flags">
 				<input type=checkbox bind:checked={shared} value="false">
 				Shared
+			</label>
+
+			<label class="flags">
+				<input type=checkbox bind:checked={haMode} value="false">
+				No Remove Colliding tunnels (HA Mode)
 			</label>
 		</div>
 
@@ -198,7 +204,12 @@
 
 	<h2>Sauce Connect Start Command</h2>
 	<div class="cmd-container">
-		<code>{command} {user} {apiKey}</code>
+		{#if os === 'windows'}
+			<code>{command} -u %{user}% -k %{apiKey}%</code>
+		{:else}
+			<code>{command} -u ${user} -k ${apiKey}</code>
+		{/if}
+
 		{#if name.length > 0}
 			<code>-i {name}</code> 
 		{/if}
@@ -217,6 +228,10 @@
 		
 		{#if logfile}
 			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">-l {logfile}</code>	
+		{/if}
+
+		{#if haMode}
+			<code in:fade="{{delay:600, duration: 1500}}" out:fade="{{duration: 800}}">--no-remove-colliding-tunnels</code>
 		{/if}
 
 		{#if noSslBump.length > 0}
